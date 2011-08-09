@@ -136,7 +136,9 @@ method     safe    idempotent   semantics    resource     cacheable
 <pre>
  curl -v http://localhost/
 
- curl -v http://localhost/
+ curl -v http://localhost/pubs/2
+
+ curl -v -x POST http://localhost/pubs/:pub_id
 </pre>
 	</section>
 	<section>
