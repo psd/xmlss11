@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+
+  <!--[if lt IE 9]>
+  <script src="lib/html5shim.js"></script>
+  <![endif]-->
+
+  <link rel="stylesheet" href="lib/styles.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <title>XML Summer School | Practical Web Applications</title>
+</head>
+<body>
+  <header>
+	<h1>XML Summer School 2011 | Practical Web Applications</h1>
+	<nav>
+		<ul>
+			<li><button id="prev-btn" title="Previous slide">Previous Slide</button></li>
+			<li><span id="slide-number"></span>/<span id="slide-total"></span></li>
+			<li><button id="next-btn" title="Next Slide">Next Slide</button></li>
+		</ul>
+    </nav>
+  </header>
+
+  <div id="deck">
+	<section class="title">
+	  <a href="http://www.xmlsummerschool.com" class="logo"><img src="images/xsslogo.jpg"></a>
+      <hgroup>
+        <h1>Practical Web Apps</h1>
+		<h2>22nd September 2011</h2>
+      </hgroup>
+		<img class="banner" src="images/xssbanner.png"/></p>
+		 <aside>
+			<h2>Web Information Architecture</h2>
+			<p>Matt Patterson &amp; Paul Downey</p>
+		</aside>
+		<footer>
+			<a href="http://creativecommons.org/licenses/by/3.0/"><img src="images/cc.png" class="license"></a>
+			<p class="link"><a href="http://www.xmlsummerschool.com">www.xmlsummerschool.com</a></p>
+		</footer>
+	</section>
+
+	<section>
+		<hgroup><h1>Overview</h1></hgroup>
+		<ul>
+			<li>Archi­tec­tural Styles: REST (v) RPC-style web services
+			<li>Resources
+			<li>Verbs: GET, POST, PUT, DELETE
+			<li>Con­tent nego­ti­ation, canon­ical URIs and HTTP Range-14
+			<li>Can your Web­site be your API?
+			<li>Cach­ing
+			<li>Mod­el­ling data as resources: doc­u­ments, tags, search­ing, filtering
+			<li>Client-Side versus Server (JavaS­cript versus The Web)
+			<li>The prac­tical exer­cise will be get­ting star­ted with our case-study using Sinatra (a Ruby frame­work avail­able from http://sinatrarb.com).
+	  </ul>
+    </section>
+
+	<section>
+		<img src="images/ArchitectualStyle.jpg" title="Architectual Style"/>
+	</section>
+	<section>
+		<hgroup><h1>A Short History of Enterprise Integration</h1></hgroup>
+		<ul>
+			<li>File Transfer
+			<li>Raw Messaging
+			<li>Shared Databases
+			<li>Remote Procedure Calls
+			<li>Object Request Brokers
+			<li>Message Queues
+			<li>Enterprise Application Integration
+			<li>Workflow Engines
+		</ul>
+		<p><i>Diverse, Home-grown, Integration Hell!</i></p>
+	</section>
+	<section>
+		<img src="images/Posse.jpg" title="Fielding Has A Posse"/>
+	</section>
+	<section>
+		<img src="images/ClientServer.jpg" title="Client-Server"/>
+	</section>
+	<section>
+		<img src="images/LayeredSystem.jpg" title="Layered System"/>
+	</section>
+	<section>
+		<hgroup><h1>Transport Independence</h1></hgroup>
+		<img src="images/transport-independence.png" title="Transport Independence"/>
+	</section>
+	<section>
+		<img src="images/DataElements.jpg" title="Data Elements"/>
+	</section>
+	<section>
+	<table>
+		<tr><th>Data Element </th><th> Modern Web Examples</th></tr>
+		<tr><td>resource </td><td> the intended conceptual target of a hypertext reference</td></tr>
+		<tr><td>resource identifier</td><td> URL, URN</td></tr>
+		<tr><td>representation</td><td> HTML document, JPEG image, JSON, XML</td></tr>
+		<tr><td>representation metadata</td><td> media type, last-modified time</td></tr>
+		<tr><td>resource metadata</td><td> source link, alternates, vary</td></tr>
+		<tr><td>control data </td><td> if-modified-since, cache-control</td></tr>
+	</table>
+	</section>
+	<section>
+		<img src="images/Resource.jpg" title="Resource"/>
+	</section>
+	<section>
+		<img src="images/UniformInterface.jpg" title="Uniform Interface"/>
+	</section>
+	<section>
+<pre>
+method     safe    idempotent   semantics    resource     cacheable
+             -----------------------------------------------------------
+   GET       |  X          X            X           X             X    |
+   HEAD      |  X          X            X           X             X    |
+   PUT       |             X            X           X                  |
+   POST      |                                                    *    |
+   DELETE    |             X            X           X                  |
+   OPTIONS   |  X          X            X                              |
+             -----------------------------------------------------------
+   PROPFIND  |  X          X            X           X             *    |
+   PROPPATCH |             X            X           X                  |
+   MKCOL     |             *            X           X                  |
+   COPY      |             X            X           X                  |
+   MOVE      |             ?            X           X                  |
+   LOCK      |                          X           X                  |
+   UNLOCK    |             X            X           X                  |
+   PATCH     |             *            X           X                  |
+             -----------------------------------------------------------
+</pre>
+	</section>
+	<section>
+		<img title="Tim Bray" src="images/TimBray.jpg" class="avatar">
+		<blockquote>A real RESTafarian knows *all* the 'curl' options.
+		<span class="attribution">— <a href="http://twitter.com/timbray/status/1600810587">Tim Bray</a> </span>
+		</blockquote>
+<pre>
+ curl -v http://localhost/
+
+ curl -v http://localhost/
+</pre>
+	</section>
+	<section>
+		<img src="images/ResourceIdentifiers.jpg" title="Resource Identifiers"/>
+	</section>
+	<section>
+		<img src="images/Representations.jpg" title="Representations"/>
+	</section>
+	<section>
+		<img src="images/Stateless.jpg" title="Stateless"/>
+	</section>
+	<section>
+		<img src="images/Cache.jpg" title="Caching"/>
+	</section>
+	<section>
+		<img src="images/CodeOnDemand.jpg" title="Code on Demand"/>
+	</section>
+
+	</div>
+
+
+	<script src="lib/jquery-1.5.2.min.js"></script>
+	<script src="lib/jquery.jswipe-0.1.2.js"></script>
+	<script src="lib/htmlSlides.js"></script>
+	<script>
+$(function() {
+		htmlSlides.init({ hideToolbar: true });
+});
+	</script>
+</body>
+</html>

@@ -1,0 +1,3 @@
+[submodule "pub_finder_general"]
+	path = pub_finder_general
+	url = git@github.com:fidothe/pub_finder_general.git

@@ -1,0 +1,138 @@
+body {
+	font-family: sans-serif;
+	background: #fff;
+	font-size: 3em;
+}
+
+// TBD: fix specifity of slideshow stylesheet - #deck is very high, hence many a hack here
+
+#deck h1 { 
+	font-size: 1.75em;
+}
+
+#deck h2 { 
+	font-size: 1.2em;
+}
+
+#deck blockquote {
+	margin-left: 4em;
+	font-style: italic;
+}
+
+#deck .attribution {
+	padding-left: 25%;
+	display: inline;
+	font-size: 0.5em;
+}
+
+#deck h1 a,
+#deck h1 a:active,
+#deck h1 a:hover,
+#deck h1 a:visited {
+	color: #000;
+	text-decoration: none;
+}
+
+#deck .title {
+	padding: 0;
+	margin: 0;
+	background-color: #fff;
+	color: #000;
+	text-shadow: none;
+}
+
+#deck .logo img {
+	margin-left: 1em;
+	height: 1.8em;
+	float: left;
+}
+
+#deck .title hgroup {
+	float: left;
+}
+
+#deck hgroup {
+	font-size: 0.4em;
+}
+
+#deck .title hgroup {
+	margin-bottom: 0;
+	padding-bottom: 0;
+}
+
+#deck img.avatar {
+	margin-top: 0.5em;
+	margin-left: 1em;
+	height: 2em;
+	float: left;
+}
+
+#deck footer {
+	margin-top: 2em;
+	font-size: 2em;
+	background-color: #FDFF6A;
+	clear: both;
+	height: 4em;
+	padding: 0.25em;
+}
+
+#deck footer img {
+	height: auto;
+	width: auto;
+	float: left;
+}
+
+#deck footer p.link {
+	clear: none;
+	float: left;
+	padding-left: 5em;
+}
+
+#deck .title aside {
+	clear: both;
+	float: left;
+	margin-left: 8em;
+}
+
+img {
+	height: 90%;
+}
+
+img.banner { 
+	height: auto; 
+	min-width: 100%;
+}
+
+pre {
+	clear: both;
+	width: 80%;
+	margin: 1em auto;
+	border: 1px solid black;
+	background: #f5f6f6;
+	text-align: left;
+}
+
+table {
+	font-size: 0.8em;
+}
+
+th {
+	background-color: #000;
+	color: #fff;
+	padding: 0.2em 1em;
+}
+td {
+	padding: 0.2em 1em;
+	margin-bottom: 0.2em;
+}
+
+td:nth-child(odd) {
+	width: 50%;
+	background-color: #e8edff;
+	color: #000;
+}
+td:nth-child(even) {
+	width: 50%;
+	background-color: #eff2ff;
+}
+
