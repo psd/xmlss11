@@ -106,7 +106,7 @@ img.banner {
 pre {
 	clear: both;
 	width: 80%;
-	margin: 1em auto;
+	margin: 3em auto;
 	border: 1px solid black;
 	background: #f5f6f6;
 	text-align: left;
@@ -134,5 +134,17 @@ td:nth-child(odd) {
 td:nth-child(even) {
 	width: 50%;
 	background-color: #eff2ff;
+}
+
+#deck .callout {
+	text-align: center;
+	width: 100%;
+	margin: 1em auto;
+	font-size: 2em;
+}
+
+.amp {
+	font-family: "Baskerville", "Bell MT", "Adobe Caslon Pro", "Goudy Old Style";
+	font-style: italic;
 }
 

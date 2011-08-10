@@ -60,20 +60,6 @@
 		<img src="images/ArchitectualStyle.jpg" title="Architectual Style"/>
 	</section>
 	<section>
-		<hgroup><h1>A Short History of Enterprise Integration</h1></hgroup>
-		<ul>
-			<li>File Transfer
-			<li>Raw Messaging
-			<li>Shared Databases
-			<li>Remote Procedure Calls
-			<li>Object Request Brokers
-			<li>Message Queues
-			<li>Enterprise Application Integration
-			<li>Workflow Engines
-		</ul>
-		<p><i>Diverse, Home-grown, Integration Hell!</i></p>
-	</section>
-	<section>
 		<img src="images/Posse.jpg" title="Fielding Has A Posse"/>
 	</section>
 	<section>
@@ -129,20 +115,31 @@ method     safe    idempotent   semantics    resource     cacheable
 </pre>
 	</section>
 	<section>
+		<hgroup><h1>Browsers are not the only User-Agent</h1></hgroup>
+<pre>
+ curl http://localhost/
+
+ curl -v http://localhost/
+</pre>
 		<img title="Tim Bray" src="images/TimBray.jpg" class="avatar">
 		<blockquote>A real RESTafarian knows *all* the 'curl' options.
 		<span class="attribution">— <a href="http://twitter.com/timbray/status/1600810587">Tim Bray</a> </span>
 		</blockquote>
-<pre>
- curl -v http://localhost/
-
- curl -v http://localhost/pubs/2
-
- curl -v -x POST http://localhost/pubs/:pub_id
-</pre>
 	</section>
 	<section>
 		<img src="images/ResourceIdentifiers.jpg" title="Resource Identifiers"/>
+	</section>
+	<section>
+		<hgroup><h1>Creating a Resource</h1></hgroup>
+		<pre>
+ curl -x POST http://localhost/pubs
+</pre>
+	</section>
+	<section>
+		<hgroup><h1>Lists of Resources</h1></hgroup>
+		<pre>
+ curl -x GET http://localhost/pubs
+</pre>
 	</section>
 	<section>
 		<img src="images/Representations.jpg" title="Representations"/>
@@ -156,7 +153,18 @@ method     safe    idempotent   semantics    resource     cacheable
 	<section>
 		<img src="images/CodeOnDemand.jpg" title="Code on Demand"/>
 	</section>
-
+	<section>
+		<div class="callout">
+			Progressive enhancement
+				<br><span class="amp">&amp;</span>
+			<br>Graceful degredation
+		</div>
+	</section>
+	<section>
+		<div class="callout">
+			<br><span class="amp">#!</span>
+		</div>
+	</section>
 	</div>
 
 
