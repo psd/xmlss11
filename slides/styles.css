@@ -110,6 +110,7 @@ pre {
 	border: 1px solid black;
 	background: #f5f6f6;
 	text-align: left;
+	padding: 2em;
 }
 
 table {
@@ -146,5 +147,9 @@ td:nth-child(even) {
 .amp {
 	font-family: "Baskerville", "Bell MT", "Adobe Caslon Pro", "Goudy Old Style";
 	font-style: italic;
+}
+
+#deck ul {
+	padding: 1em;
 }
 

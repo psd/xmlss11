@@ -52,9 +52,17 @@
 			<li>Cach­ing
 			<li>Mod­el­ling data as resources: doc­u­ments, tags, search­ing, filtering
 			<li>Client-Side versus Server (JavaS­cript versus The Web)
-			<li>The prac­tical exer­cise will be get­ting star­ted with our case-study using Sinatra (a Ruby frame­work avail­able from http://sinatrarb.com).
 	  </ul>
-    </section>
+	  <p>A practical exercise, tweaking <a href="pub_finder_general">pub_finder_general</a>, our case-study written in <a href="">Ruby</a> using <a href="http://sinatrarb.com">Sinatra</a>.</p>
+	  </section>
+	<section>
+		<hgroup><h1>Latest Code <span class="amp">&</span>  Slides</h1></hgroup>
+		<p><a href="https://github.com/psd/xmlss11">https://github.com/psd/xmlss11</a></p>
+		<pre>
+$ git clone git@github.com:psd/xmlss11.git
+$ git submodule update
+		</pre>
+	</section>
 
 	<section>
 		<img src="images/ArchitectualStyle.jpg" title="Architectual Style"/>
@@ -93,8 +101,20 @@
 		<img src="images/UniformInterface.jpg" title="Uniform Interface"/>
 	</section>
 	<section>
+		<img src="images/showerhead.jpg" title="URIs Everywhere"/>
+	</section>
+	<section>
+	<blockquote>
+	What makes a cool URI?
+	<br>A cool URI is one which does not change.
+	<br>What sorts of URI change?
+	<br>URIs don't change: people change them.
+	<span class="attribution">— <a href="http://www.w3.org/Provider/Style/URI">Timbl</a></span>
+	</blockquote>
+	</section>
+	<section>
 <pre>
-method     safe    idempotent   semantics    resource     cacheable
+   method     safe    idempotent   semantics    resource     cacheable
              -----------------------------------------------------------
    GET       |  X          X            X           X             X    |
    HEAD      |  X          X            X           X             X    |
@@ -117,9 +137,9 @@ method     safe    idempotent   semantics    resource     cacheable
 	<section>
 		<hgroup><h1>Browsers are not the only User-Agent</h1></hgroup>
 <pre>
- curl http://localhost/
+curl http://localhost/
 
- curl -v http://localhost/
+curl -v http://localhost/
 </pre>
 		<img title="Tim Bray" src="images/TimBray.jpg" class="avatar">
 		<blockquote>A real RESTafarian knows *all* the 'curl' options.
@@ -132,17 +152,64 @@ method     safe    idempotent   semantics    resource     cacheable
 	<section>
 		<hgroup><h1>Creating a Resource</h1></hgroup>
 		<pre>
- curl -x POST http://localhost/pubs
+curl -x POST http://localhost/pubs 
+</pre>
+		<pre>
+curl -X PUT -H 'Content-Type: application/json' \
+	-d '{ "name": "Eagle" }' http://localhost/pubs
+</pre>
+	</section>
+	<section>
+		<hgroup><h1>Adding a Photograph</h1></hgroup>
+		<pre>
+curl -X PUT -H 'Content-Type: image/png' \
+	--data-binary @pub-sign.png http://localhost/pub/1/photo
 </pre>
 	</section>
 	<section>
 		<hgroup><h1>Lists of Resources</h1></hgroup>
 		<pre>
- curl -x GET http://localhost/pubs
-</pre>
+curl -x GET http://localhost/pubs
+		</pre>
+	</section>
+	<section>
+		<hgroup><h1>Searching</h1></hgroup>
+		<pre>
+curl -x GET http://localhost/search?name="The%20Jericho%20Tavern"
+		</pre>
 	</section>
 	<section>
 		<img src="images/Representations.jpg" title="Representations"/>
+	</section>
+	<section>
+		<hgroup><h1>A Resource in different representations</h1></hgroup>
+		<pre>
+curl GET http://localhost/pubs
+curl GET http://localhost/pubs.html
+curl GET http://localhost/pubs.xml
+curl GET http://localhost/pubs.json</pre>
+	</section>
+	<section>
+		<hgroup><h1>Content Negotiation</h1></hgroup>
+		<pre>
+curl -H 'Accept: application/json' http://localhost/pubs
+curl -H 'Accept: application/atom+xml' http://localhost/pubs
+		</pre>
+		<p><i>YAGNI?</i></p>
+	</section>
+	<section>
+		<hgroup><h1>Semantics <span class="amp">&amp;</span> Hypermedia</h1></hgroup>
+		<ul>
+			<li><a href="http://microformats.org">Microformats</a></li>
+			<li><a href="http://www.w3.org/TR/xhtml-rdfa-primer/">RDF-a</a></li>
+			<li><a href="http://schema.org/">schema.org</a> — <a href="http://www.google.com/webmasters/tools/richsnippets">rich snippets</a></li>
+			<li><a href="">HTTP Range-14</a> — <i>The Madness!</i></li>
+		</ul>
+		<p>Much deep thinking in evidence at <a htef="http://www.jenitennison.com/blog/">www.jenitennison.com/blog</a></p>
+		<ul>
+			<li><a href="http://oembed.com/">oEmbed</a></li>
+			<li><a href="http://webintents.org/">Web Intents</a> — <a href="">Web Actions</a></li>
+		</ul>
 	</section>
 	<section>
 		<img src="images/Stateless.jpg" title="Stateless"/>
@@ -151,18 +218,28 @@ method     safe    idempotent   semantics    resource     cacheable
 		<img src="images/Cache.jpg" title="Caching"/>
 	</section>
 	<section>
+		<hgroup><h1>Cache Control</h1></hgroup>
+		<pre>
+HTTP GET http://flickr.com/photos/psd/2450160
+If-Modified-Since:  Fri, 31 Dec 1999 23:59:59 GMT
+If-None-Match: 'guid-21343244324' 
+
+HTTP/1.1 304 Not Modified</pre>
+		<p><a href="http://www.mnot.net/cache_docs/">Caching Tutorial for Web Authors and Webmasters</a> — <a href="http://www.mnot.net/">mnot</a></p>
+	</section>
+	<section>
 		<img src="images/CodeOnDemand.jpg" title="Code on Demand"/>
 	</section>
 	<section>
 		<div class="callout">
-			Progressive enhancement
-				<br><span class="amp">&amp;</span>
-			<br>Graceful degredation
+			<br><span class="amp">#!</span>
 		</div>
 	</section>
 	<section>
 		<div class="callout">
-			<br><span class="amp">#!</span>
+			Progressive enhancement
+			<br><span class="amp">&amp;</span>
+			<br>Graceful degredation
 		</div>
 	</section>
 	</div>
