@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+
+  <!--[if lt IE 9]>
+  <script src="lib/html5shim.js"></script>
+  <![endif]-->
+
+  <link rel="stylesheet" href="lib/styles.css" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>XML Summer School | Practical Web Applications</title>
+</head>
+<body>
+  <header>
+	<h1>XML Summer School 2011 | Practical Web Applications</h1>
+	<nav>
+		<ul>
+			<li><button id="prev-btn" title="Previous slide">Previous Slide</button></li>
+			<li><span id="slide-number"></span>/<span id="slide-total"></span></li>
+			<li><button id="next-btn" title="Next Slide">Next Slide</button></li>
+		</ul>
+    </nav>
+  </header>
+
+  <div id="deck">
+	<section class="title">
+	  <a href="http://www.xmlsummerschool.com" class="logo"><img src="images/xsslogo.jpg"></a>
+      <hgroup>
+        <h1>Practical Web Apps</h1>
+		<h2>22nd September 2011</h2>
+      </hgroup>
+		<img class="banner" src="images/xssbanner.png"/></p>
+		 <aside>
+			<h2>Nifty Tools</h2>
+			<p>Matt Patterson &amp; Paul Downey</p>
+		</aside>
+		<footer>
+			<a href="http://creativecommons.org/licenses/by/3.0/"><img src="images/cc.png" class="license"></a>
+			<p class="link"><a href="http://www.xmlsummerschool.com">www.xmlsummerschool.com</a></p>
+		</footer>
+	</section>
+  <section>
+    <hgroup><h1>Overview</h1></hgroup>
+    <ul>
+      <li>Reading</li>
+      <li>Writing</li>
+      <li>DOM Scripting</li>
+    </ul>
+		<pre data-lang="sh">
+HTTP GET http://flickr.com/photos/psd/2450160
+If-Modified-Since:  Fri, 31 Dec 1999 23:59:59 GMT
+If-None-Match: 'guid-21343244324' 
+
+HTTP/1.1 304 Not Modified</pre>
+  </section>
+  <section>
+    <hgroup><h1>Reading</h1></hgroup>
+XML parsing with Nokogiri
+simple XPath
+CSS Selectors
+More complex documents
+simple (complex) XPath - custom functions
+  </section>
+  <section>
+  <hgroup><h1>Nokogiri</h1></hgroup>
+  <ul>
+    <li>http://nokogiri.org/</li>
+    <li>A Ruby wrapper around GNOME's LibXML 2 / LibXSLT</li>
+    <li>Provides a simple and expressive API</li>
+    <li>MIT licensed</li>
+  </ul>
+  </section>
+  <section>
+  <hgroup><h1>Simple parsing</h1></hgroup>
+  <ul>
+    <li>Here's what you need to do in order to parse a document and get something out</li>
+  </ul>
+  </section>
+  <section>
+    <hgroup><h1>Writing</h1></hgroup>
+Builder
+DOM-ish with Nokogiri
+Namespaces, oh my!
+  </section>
+  <section>
+    <hgroup><h1>DOM scripting</h1></hgroup>
+  </section>
+	</div>
+
+
+	<script src="lib/jquery-1.5.2.min.js"></script>
+	<script src="lib/jquery.jswipe-0.1.2.js"></script>
+	<script src="lib/htmlSlides.js"></script>
+	<script>
+$(function() {
+		htmlSlides.init({ hideToolbar: true });
+});
+	</script>
+</body>
+</html>
+
