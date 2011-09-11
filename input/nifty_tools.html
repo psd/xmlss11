@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8"></meta>
 
   <!--[if lt IE 9]>
   <script src="lib/html5shim.js"></script>
   <![endif]-->
 
-  <link rel="stylesheet" href="lib/styles.css" />
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="stylesheet" href="pygments.css" />
+  <link rel="stylesheet" href="lib/styles.css"></link>
+  <link rel="stylesheet" href="styles.css"></link>
+  <link rel="stylesheet" href="pygments.css"></link>
 
   <title>XML Summer School | Practical Web Applications</title>
 </head>
@@ -26,68 +26,220 @@
   </header>
 
   <div id="deck">
-	<section class="title">
-	  <a href="http://www.xmlsummerschool.com" class="logo"><img src="images/xsslogo.jpg"></a>
+    <section class="title">
+      <a href="http://www.xmlsummerschool.com" class="logo"><img
+src="images/xsslogo.jpg"/></a>
       <hgroup>
         <h1>Practical Web Apps</h1>
-		<h2>22nd September 2011</h2>
+        <h2>22nd September 2011</h2>
       </hgroup>
-		<img class="banner" src="images/xssbanner.png"/></p>
-		 <aside>
-			<h2>Nifty Tools</h2>
-			<p>Matt Patterson &amp; Paul Downey</p>
-		</aside>
-		<footer>
-			<a href="http://creativecommons.org/licenses/by/3.0/"><img src="images/cc.png" class="license"></a>
-			<p class="link"><a href="http://www.xmlsummerschool.com">www.xmlsummerschool.com</a></p>
-		</footer>
-	</section>
-  <section>
-    <hgroup><h1>Overview</h1></hgroup>
-    <ul>
-      <li>Reading</li>
-      <li>Writing</li>
-      <li>DOM Scripting</li>
-    </ul>
-		<pre data-lang="sh">
-HTTP GET http://flickr.com/photos/psd/2450160
-If-Modified-Since:  Fri, 31 Dec 1999 23:59:59 GMT
-If-None-Match: 'guid-21343244324' 
+      <p><img class="banner" src="images/xssbanner.png"/></p>
+      <aside>
+        <h2>Nifty Tools</h2>
+        <p>Matt Patterson &amp; Paul Downey</p>
+      </aside>
+      <footer>
+        <a href="http://creativecommons.org/licenses/by/3.0/"><img
+src="images/cc.png" class="license"/></a>
+        <p class="link"><a href="http://www.xmlsummerschool.com">www.xmlsummerschool.com</a></p>
+      </footer>
+    </section>
+    <section>
+      <hgroup><h1>Overview</h1></hgroup>
+      <ul>
+        <li>Reading</li>
+        <li>Writing</li>
+        <li>DOM Scripting</li>
+      </ul>
+    </section>
+    <section>
+      <hgroup><h1>Reading</h1></hgroup>
+      <p>simple XPath
+         CSS Selectors
+         More complex documents
+         simple (complex) XPath - custom functions
+      </p>
+    </section>
+    <section>
+      <hgroup><h1>Nokogiri</h1></hgroup>
+      <ul>
+        <li><a href="http://nokogiri.org/">http://nokogiri.org/</a></li>
+        <li>A Ruby wrapper around GNOME's LibXML 2 / LibXSLT</li>
+        <li>Provides a simple and expressive API</li>
+        <li>MIT licensed</li>
+      </ul>
+      <h3>Nokogiri is a Rubygem</h3>
+      <ul>
+        <li><a href="http://rubygems.org/">http://rubygems.org/</a></li>
+        <li>Ruby's pan-OS package manager</li>
+        <li>Provided you have the development headers for libxml2 and
+libxslt, and a C compiler, installation is as simple as:</li>
+      </ul>
+      <pre data-lang="sh">
+gem install nokogiri
+</pre>
+      <ul>
+        <li>There are pre-built binary versions of the gem for
+Windows</li>
+      </ul>
+    </section>
+    <section>
+      <hgroup><h1>Simple parsing</h1></hgroup>
+      <ul>
+        <li>Here's what you need to do in order to parse a document and get something out</li>
+      </ul>
+      <pre data-lang="ruby"><![CDATA[
+require 'nokogiri'
+require 'open-uri'
 
-HTTP/1.1 304 Not Modified</pre>
-  </section>
-  <section>
-    <hgroup><h1>Reading</h1></hgroup>
-XML parsing with Nokogiri
-simple XPath
-CSS Selectors
-More complex documents
-simple (complex) XPath - custom functions
-  </section>
-  <section>
-  <hgroup><h1>Nokogiri</h1></hgroup>
-  <ul>
-    <li>http://nokogiri.org/</li>
-    <li>A Ruby wrapper around GNOME's LibXML 2 / LibXSLT</li>
-    <li>Provides a simple and expressive API</li>
-    <li>MIT licensed</li>
-  </ul>
-  </section>
-  <section>
-  <hgroup><h1>Simple parsing</h1></hgroup>
-  <ul>
-    <li>Here's what you need to do in order to parse a document and get something out</li>
-  </ul>
-  </section>
-  <section>
-    <hgroup><h1>Writing</h1></hgroup>
-Builder
-DOM-ish with Nokogiri
-Namespaces, oh my!
-  </section>
-  <section>
-    <hgroup><h1>DOM scripting</h1></hgroup>
-  </section>
+doc = Nokogiri::HTML(open('http://w3.org/'))
+]]></pre>
+      <ul>
+        <li>Nokogiri provides two parsing modes: HTML (more lenient) &amp; XML</li>
+      </ul>
+      <pre data-lang="ruby"><![CDATA[
+Nokogiri::XML(File.open('/path/to/xml'))
+Nokogiri::HTML('<html><head><title>HTML</title></head><body></body></html>')
+]]></pre>
+    </section>
+    <section>
+      <hgroup><h1>Working with XPath</h1></hgroup>
+      <ul>
+        <li>In the simple case</li>
+      </ul>
+      <pre data-lang="ruby"><![CDATA[
+require 'nokogiri'
+require 'open-uri'
+
+interesting_url = 'http://www.bbc.co.uk/radio3/programmes/schedules'
+doc = Nokogiri::HTML(open(interesting_url))
+# Using XPath
+puts 'YAY!' if doc.xpath('//a').to_a.index do |node|
+  node.text =~ /Late Junction/
+end
+doc.at_xpath('id("evening")) == doc.xpath('id("evening")).first # => true
+# context node is set for you:
+doc.xpath('id("evening")').first.xpath('ol/li/div/div[@class="summary"]').length
+# => 5
+]]></pre>
+    </section>
+    <section>
+      <hgroup><h1>Nokogiri's NodeSets</h1></hgroup>
+      <ul>
+        <li>NodeSets behave a lot like Nodes for things like continuing to
+search</li>
+      </ul>
+      <pre data-lang="ruby"><![CDATA[
+doc.xpath('id("evening")').first.xpath('ol/li/div/div[@class="summary"]').length
+# => 5
+doc.xpath('id("evening")').xpath('ol/li/div/div[@class="summary"]').length
+# => 5 
+doc.xpath('id("broadcasts")/li').first.
+  xpath('ol/li/div/div[@class="summary"]').length
+# => 1 
+doc.xpath('id("broadcasts")/li').
+  xpath('ol/li/div/div[@class="summary"]').length
+# => 13 
+]]></pre>
+    </section>
+    <section>
+      <hgroup><h1>Working with CSS selectors</h1></hgroup>
+      <ul>
+        <li>Nokogiri supports CSS3 Selectors</li>
+      </ul>
+      <pre data-lang="ruby"><![CDATA[
+require 'nokogiri'
+require 'open-uri'
+
+interesting_url = 'http://www.bbc.co.uk/radio3/programmes/schedules'
+doc = Nokogiri::HTML(open(interesting_url))
+# Using CSS
+puts 'YAY!' if doc.css('div.episode span.title').to_a.index do |node|
+  node.text.strip == 'Late Junction'
+end
+doc.at_css('#broadcasts')
+]]></pre>
+    </section>
+    <section>
+      <hgroup><h1>Traversal</h1></hgroup>
+      <ul>
+        <li>Nokogiri's DOMish API </li>
+      </ul>
+      <pre data-lang="ruby"><![CDATA[
+doc = Nokogiri::HTML(open(interesting_url))
+# Using traversal
+nodes = []
+doc.traverse do |node|
+  nodes << node if node.text? && node.text =~ /Late Junction/
+end
+puts 'YAY!' unless nodes.empty?
+]]></pre>
+    </section>
+    <section>
+      <hgroup><h1>Traversal</h1></hgroup>
+      <ul>
+        <li>Nokogiri's DOMish API </li>
+      </ul>
+      <pre data-lang="ruby"><![CDATA[
+doc = Nokogiri::HTML(open(interesting_url))
+node = doc.at_css('#broadcasts')
+
+node.previous # node.previous_sibling
+node.next     # node.next_sibling
+node.children
+node.element_children
+node.text?
+node.cdata?
+node.element?
+node.attributes
+node.attr('class') # => 'periods'
+node.attribute('class') # => #<Nokogiri::XML::Attr:0x3fd840c77830 name="class" value="periods">
+]]></pre>
+    </section>
+    <section>
+      <hgroup><h1>Working with XPath (again)</h1></hgroup>
+      <ul>
+        <li>Working with Namespaces</li>
+      </ul>
+      <pre data-lang="ruby"><![CDATA[
+doc.at_xpath('//prefix:elementName', {'prefix' => 'http://example.org/ns'})
+]]></pre>
+      <ul>
+        <li>And variables</li>
+      </ul>
+       <pre data-lang="ruby"><![CDATA[
+doc.xpath('.//address[@domestic=$value]', nil, {:value => 'Yes'})
+]]></pre>
+    </section>
+    <section>
+      <hgroup><h1>Working with XPath (again)</h1></hgroup>
+      <ul>
+        <li>And custom functions</li>
+      </ul>
+      <pre data-lang="ruby"><![CDATA[
+class CustomFunctions
+  def ftw(node_set, argument)
+    # do something clever here which returns an Array of nodes
+    node_set.find_all { |n| ModelClass.validate_thing(n, argument) }
+  end
+end
+doc.at_xpath('//element[ftw(., @useful)]', CustomFunctions.new)
+]]></pre>
+      <ul>
+        <li>Although, to be honest, I've never needed to do either of
+        those last two</li>
+      </ul>
+    </section>
+    <section>
+      <hgroup><h1>Writing</h1></hgroup>
+      <p>Builder
+        DOM-ish with Nokogiri
+        Namespaces, oh my!
+      </p>
+    </section>
+    <section>
+      <hgroup><h1>DOM scripting</h1></hgroup>
+    </section>
 	</div>
 
 
