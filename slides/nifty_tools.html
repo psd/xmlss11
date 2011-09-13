@@ -71,7 +71,7 @@
       </ul>
       <h3>Nokogiri is a Rubygem</h3>
       <ul>
-        <li><a href="http://rubygems.org/">http://rubygems.org/</a></li>
+        <li><a href="http://rubygems.org/gems/nokogiri">http://rubygems.org/gems/nokogiri</a></li>
         <li>Ruby's pan-OS package manager</li>
         <li>Provided you have the development headers for libxml2 and
 libxslt, and a C compiler, installation is as simple as:</li>
@@ -318,6 +318,275 @@ ruby-1.9.2-p290 :001 &gt;
       </ul>
     </section>
     <section>
+      <hgroup><h1>Builder</h1></hgroup>
+      <ul>
+        <li><a href="https://github.com/jimweirich/builder">https://github.com/jimweirich/builder</a></li>
+        <li>A simple, idiomatic Ruby, XML generation syntax</li>
+        <li>Built around blocks and dynamic method calls</li>
+        <li>Simple</li>
+        <li>MIT licensed</li>
+      </ul>
+      <h3>Builder is a Rubygem</h3>
+      <ul>
+        <li><a href="http://rubygems.org/gems/builder">http://rubygems.org/gems/builder</a></li>
+        <li>It's pure ruby, so no platform gotchas and installation is,
+again:</li>
+      </ul>
+      <div class="highlight">
+<pre>gem install builder
+</pre>
+</div>
+
+
+    </section>
+    <section>
+      <hgroup><h1>The simplest case</h1></hgroup>
+      <ul>
+        <li>Build and write a document to a string</li>
+      </ul>
+      <div class="highlight">
+<pre><span class="nb">require</span> <span class="s1">'builder'</span>
+<span class="n">doc</span> <span class="o">=</span> <span class="no">Builder</span><span class="o">::</span><span class="no">XmlMarkup</span><span class="o">.</span><span class="n">new</span>
+<span class="n">doc</span><span class="o">.</span><span class="n">html</span> <span class="k">do</span> <span class="o">|</span><span class="n">html</span><span class="o">|</span>
+  <span class="n">html</span><span class="o">.</span><span class="n">head</span> <span class="k">do</span> <span class="o">|</span><span class="n">head</span><span class="o">|</span>
+    <span class="n">head</span><span class="o">.</span><span class="n">title</span> <span class="s2">"Hello there"</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+<span class="c1"># =&gt; "&lt;html&gt;&lt;head&gt;&lt;title&gt;Hello there&lt;/title&gt;&lt;/head&gt;&lt;/html&gt;"</span>
+</pre>
+</div>
+
+    </section>
+    <section>
+      <hgroup><h1>A more complete case</h1></hgroup>
+      <ul>
+        <li>XML declaration and indentation please</li>
+        <li>Also, lets retrieve the result string after we're done</li>
+      </ul>
+      <div class="highlight">
+<pre><span class="nb">require</span> <span class="s1">'builder'</span>
+<span class="n">doc</span> <span class="o">=</span> <span class="no">Builder</span><span class="o">::</span><span class="no">XmlMarkup</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:indent</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">doc</span><span class="o">.</span><span class="n">instruct!</span>
+<span class="c1"># n == node</span>
+<span class="n">doc</span><span class="o">.</span><span class="n">html</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="n">n</span><span class="o">.</span><span class="n">head</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="n">n</span><span class="o">.</span><span class="n">title</span> <span class="s2">"Hello there"</span> <span class="p">}</span> <span class="p">}</span>
+<span class="n">doc</span><span class="o">.</span><span class="n">target!</span> <span class="c1"># =&gt;</span>
+<span class="c1"># &lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="c1"># &lt;html&gt;</span>
+<span class="c1">#   &lt;head&gt;</span>
+<span class="c1">#     &lt;title&gt;Hello there&lt;/title&gt;</span>
+<span class="c1">#   &lt;/head&gt;</span>
+<span class="c1"># &lt;/html&gt;"</span>
+</pre>
+</div>
+
+    </section>
+    <section>
+      <hgroup><h1>A quick digression into how it actually works</h1></hgroup>
+      <ul>
+        <li>If you don't know how it works, Builder's simplicity will bite you</li>
+        <li>Simplicity ~= Simplistic</li>
+      </ul>
+      <h4>Builder is (deliberately) very stupid</h4>
+      <ol>
+        <li>It's just writing at the end of a string or IO object</li>
+        <li>It's just intercepting all method calls to itself (except a couple of
+special ones) and assuming they're tag names</li>
+      </ol>
+      <div class="highlight">
+<pre><span class="c1"># (in IRB)</span>
+<span class="nb">require</span> <span class="s1">'builder'</span>
+<span class="n">doc</span> <span class="o">=</span> <span class="no">Builder</span><span class="o">::</span><span class="no">XmlMarkup</span><span class="o">.</span><span class="n">new</span> <span class="c1"># =&gt; "&lt;inspect/&gt;"</span>
+</pre>
+</div>
+
+      <ul>
+        <li>IRB calls inspect on the result of an expression in order to
+show you the result</li>
+        <li>Builder intercepts the call in inspect and creates a tag...</li>
+        <li>Simplicity ~= Simplistic</li>
+      </ul>
+    </section>
+    <section>
+      <hgroup><h1>That can be really handy</h1></hgroup>
+      <ul>
+        <li>Builder just works with a string, and provides access to
+that string</li>
+        <li>If you need to just shove something into the output, you can</li>
+        <li>Like, for example, IE Conditional Comments in HTML</li>
+      </ul>
+      <div class="highlight">
+<pre><span class="n">doc</span><span class="o">.</span><span class="n">html</span> <span class="k">do</span> <span class="o">|</span><span class="n">xml</span><span class="o">|</span>
+  <span class="n">xml</span><span class="o">.</span><span class="n">head</span> <span class="p">{</span> <span class="o">|</span><span class="n">xml</span><span class="o">|</span>  <span class="n">xml</span><span class="o">.</span><span class="n">title</span> <span class="s2">"Title goes here"</span> <span class="p">}</span>
+  <span class="n">xml</span> <span class="o">&lt;&lt;</span> <span class="o">&lt;&lt;-</span><span class="no">EOS</span>
+<span class="sh">  &lt;!--[if IE]&gt;</span>
+<span class="sh">  &lt;body class="ie"&gt;</span>
+<span class="sh">  &lt;![endif]--&gt;</span>
+<span class="sh">  &lt;!--[if !IE]&gt;--&gt;</span>
+<span class="sh">  &lt;body&gt;</span>
+<span class="sh">  &lt;!--&lt;![endif]&gt;--&gt;</span>
+<span class="no">  EOS</span>
+  <span class="n">xml</span><span class="o">.</span><span class="n">h1</span> <span class="s2">"Not entirely well-formed"</span>
+  <span class="n">xml</span> <span class="o">&lt;&lt;</span> <span class="s2">"  &lt;/body&gt;</span><span class="se">\n</span><span class="s2">"</span>
+<span class="k">end</span>
+</pre>
+</div>
+
+    </section>
+    <section>
+      <div class="highlight">
+<pre><span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;title&gt;</span>Title goes here<span class="nt">&lt;/title&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="c">&lt;!--[if IE]&gt;</span>
+<span class="c">  &lt;body class="ie"&gt;</span>
+<span class="c">  &lt;![endif]--&gt;</span>
+  <span class="c">&lt;!--[if !IE]&gt;--&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+  <span class="c">&lt;!--&lt;![endif]&gt;--&gt;</span>
+  <span class="nt">&lt;h1&gt;</span>Not entirely well-formed<span class="nt">&lt;/h1&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre>
+</div>
+
+    </section>
+    <section>
+      <hgroup><h1>What about attributes?</h1></hgroup>
+      <ul>
+        <li>Since element creation is a method call, attributes are
+arguments to that method call</li>
+      </ul>
+      <div class="highlight">
+<pre><span class="n">doc</span><span class="o">.</span><span class="n">html</span><span class="p">(</span><span class="ss">:lang</span> <span class="o">=&gt;</span> <span class="s1">'en'</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">xml</span><span class="o">|</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span> <span class="p">}</span>
+<span class="c1"># =&gt; &lt;html lang="en"&gt;...&lt;/html&gt;</span>
+<span class="n">xml</span><span class="o">.</span><span class="n">p</span><span class="p">(</span><span class="s2">"Paragaph text"</span><span class="p">,</span> <span class="ss">:class</span> <span class="o">=&gt;</span> <span class="s2">"example"</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;p class="example"&gt;Paragraph text&lt;/p&gt;</span>
+<span class="n">xml</span><span class="o">.</span><span class="n">p</span><span class="p">({</span><span class="ss">:class</span> <span class="o">=&gt;</span> <span class="s2">"example"</span><span class="p">},</span> <span class="s2">"Paragaph text"</span><span class="p">)</span>
+<span class="c1"># =&gt; &lt;p class="example"&gt;Paragraph text&lt;/p&gt;</span>
+</pre>
+</div>
+
+    </section>
+    <section>
+      <hgroup><h1>Another digression, this time into Ruby syntax</h1></hgroup>
+      <ul>
+        <li>Ruby allows you to omit the parentheses from method calls</li>
+        <li>(Operator precedence can hurt you here, particularly with
+blocks</li>
+        <li>Ruby doesn't actually have keyword arguments.</li>
+        <li>What it does do is assume the last argument to a method is a
+hash if it looks like one, so:</li>
+      </ul>
+      <div class="highlight">
+<pre><span class="n">object</span><span class="o">.</span><span class="n">method</span><span class="p">(</span><span class="s2">"hello"</span> <span class="o">=&gt;</span> <span class="s2">"mum"</span><span class="p">)</span> <span class="c1"># is the same as</span>
+<span class="n">object</span><span class="o">.</span><span class="n">method</span><span class="p">({</span><span class="s2">"hello"</span> <span class="o">=&gt;</span> <span class="s2">"mum"</span><span class="p">})</span>
+
+<span class="n">object</span><span class="o">.</span><span class="n">method</span><span class="p">(</span><span class="s2">"arg"</span><span class="p">,</span> <span class="s2">"hello"</span> <span class="o">=&gt;</span> <span class="s2">"mum"</span><span class="p">)</span> <span class="c1"># is the same as</span>
+<span class="n">object</span><span class="o">.</span><span class="n">method</span><span class="p">(</span><span class="s2">"arg"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"hello"</span> <span class="o">=&gt;</span> <span class="s2">"mum"</span><span class="p">})</span>
+
+<span class="n">object</span><span class="o">.</span><span class="n">method</span><span class="p">(</span><span class="s2">"hello"</span> <span class="o">=&gt;</span> <span class="s2">"mum"</span><span class="p">,</span> <span class="s2">"arg"</span><span class="p">)</span> 
+<span class="c1"># =&gt; SyntaxError: (irb):1: syntax error, unexpected ')', expecting tASSOC)</span>
+
+<span class="n">object</span><span class="o">.</span><span class="n">method</span> <span class="ss">:key</span> <span class="o">=&gt;</span> <span class="n">value</span>
+<span class="n">object</span><span class="o">.</span><span class="n">method</span> <span class="n">key</span><span class="p">:</span> <span class="n">value</span> <span class="c1"># in 1.9</span>
+</pre>
+</div>
+
+    </section>
+    <section>
+      <hgroup><h1>Namespaces</h1></hgroup>
+      <ul>
+        <li>There are two ways to do this</li>
+        <li>Neither is what I'd call pretty</li>
+        <li>Fortunately Attributes are easy</li>
+      </ul>
+      <div class="highlight">
+<pre><span class="c1"># default namespace (easy)</span>
+<span class="n">doc</span><span class="o">.</span><span class="n">elementName</span><span class="p">(</span><span class="n">xmlns</span><span class="p">:</span> <span class="s1">'http://a.url/'</span><span class="p">)</span>
+<span class="c1"># declared namespace</span>
+<span class="n">doc</span><span class="o">.</span><span class="n">prefix1</span> <span class="ss">:elementName</span><span class="p">,</span> <span class="s1">'xmlns:prefix1'</span> <span class="o">=&gt;</span> <span class="s1">'http://a.url/1'</span>
+<span class="n">doc</span><span class="o">.</span><span class="n">tag!</span><span class="p">(</span><span class="s1">'prefix2:elementName'</span><span class="p">,</span> <span class="s1">'xmlns:prefix2'</span> <span class="o">=&gt;</span> <span class="s1">'http://a.url/2'</span><span class="p">)</span>
+
+<span class="c1"># &lt;elementName xmlns="http://a.url/"/&gt;</span>
+<span class="c1"># &lt;prefix1:elementName xmlns:prefix1="http://a.url/1"/&gt;</span>
+<span class="c1"># &lt;prefix2:elementName xmlns:prefix2="http://a.url/2"/&gt;</span>
+</pre>
+</div>
+
+    </section>
+    <section>
+      <hgroup><h1>Namespaces are not real</h1></hgroup>
+      <ul>
+        <li>Very important, this.</li>
+        <li>Remember, it's just a string</li>
+      </ul>
+      <div class="highlight">
+<pre><span class="n">doc</span> <span class="o">=</span> <span class="no">Builder</span><span class="o">::</span><span class="no">XmlMarkup</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:indent</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">);</span>
+<span class="n">doc</span><span class="o">.</span><span class="n">instruct!</span>
+<span class="n">doc</span><span class="o">.</span><span class="n">html</span><span class="p">(</span><span class="s1">'xmlns'</span> <span class="o">=&gt;</span> <span class="s1">'&amp;'</span><span class="p">,</span> <span class="s1">'xmlns:woo'</span> <span class="o">=&gt;</span> <span class="s1">'http:a.url/'</span><span class="p">)</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span> <span class="n">n</span><span class="o">.</span><span class="n">head</span> <span class="p">{</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span>
+<span class="n">n</span><span class="o">.</span><span class="n">tag!</span><span class="p">(</span><span class="s1">'wah:title'</span><span class="p">,</span> <span class="s2">"Hello there"</span><span class="p">)</span> <span class="p">}</span> <span class="p">}</span>
+<span class="n">doc</span><span class="o">.</span><span class="n">target!</span> <span class="c1"># =&gt;</span>
+<span class="c1"># &lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="c1"># &lt;html xmlns="&amp;amp;"  xmlns:woo="http:a.url/"&gt;</span>
+<span class="c1">#   &lt;head&gt;</span>
+<span class="c1">#     &lt;wah:title&gt;Hello there&lt;/wah:title&gt;</span>
+<span class="c1">#   &lt;/head&gt;</span>
+<span class="c1"># &lt;/html&gt;</span>
+</pre>
+</div>
+
+    </section>
+    <section>
+      <hgroup><h1>Builder, in conclusion</h1></hgroup>
+      <ul>
+        <li>The best thing about Builder is that all it knows how to do
+is nest tags and escape strings</li>
+        <li>The worst thing about Builder is that all it knows how to do
+is nest tags and escape strings</li>
+        <li>When the problems outweigh the simplicity, use a different
+tool</li>
+      </ul>
+    </section>
+    <section>
+      <hgroup><h1>Generating XML with Nokogiri</h1></hgroup>
+      <ul>
+        <li>Nokogiri is quite happy to create new, and manipulate
+existing, documents</li>
+        <li>You can use the DOM-ish API we looked at earlier</li>
+        <li>Or, you can use its Builder-like DSL.</li>
+      </ul>
+    </section>
+    <section>
+      <hgroup><h1>The DOM-ish way</h1></hgroup>
+      <div class="highlight">
+<pre><span class="n">doc</span> <span class="o">=</span> <span class="no">Nokogiri</span><span class="o">::</span><span class="no">XML</span><span class="o">::</span><span class="no">Document</span><span class="o">.</span><span class="n">new</span>
+<span class="n">node</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">create_element</span><span class="p">(</span><span class="s2">"misterTag"</span><span class="p">)</span>
+<span class="n">doc</span><span class="o">.</span><span class="n">add_child</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+<span class="c1"># or, </span>
+<span class="n">doc</span><span class="o">.</span><span class="n">add_child</span><span class="p">(</span><span class="s1">'&lt;misterTag&gt;'</span><span class="p">)</span>
+</pre>
+</div>
+
+    </section>
+    <section>
+      <hgroup><h1>The Builder-like way</h1></hgroup>
+      <div class="highlight">
+<pre><span class="n">builder</span> <span class="o">=</span> <span class="no">Nokogiri</span><span class="o">::</span><span class="no">XML</span><span class="o">::</span><span class="no">Builder</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">xml</span><span class="o">|</span>
+  <span class="n">xml</span><span class="o">.</span><span class="n">misterTag</span><span class="p">(</span><span class="s1">'xmlns:prefix'</span> <span class="o">=&gt;</span> <span class="s1">'http://a.url/'</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">xml</span><span class="o">[</span><span class="s1">'prefix'</span><span class="o">].</span><span class="n">element</span><span class="p">(</span><span class="ss">:id</span> <span class="o">=&gt;</span> <span class="s2">"one"</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="k">end</span>
+<span class="nb">puts</span> <span class="n">builder</span><span class="o">.</span><span class="n">to_xml</span>
+<span class="c1"># &lt;?xml version="1.0"?&gt;</span>
+<span class="c1"># &lt;misterTag xmlns:prefix="http://a.url/"&gt;</span>
+<span class="c1">#   &lt;prefix:element id="one"/&gt;</span>
+<span class="c1"># &lt;/misterTag&gt;</span>
+</pre>
+</div>
+
+    </section>
+    <section>
       <hgroup><h1>DOM scripting</h1></hgroup>
       <ul>
         <li>jQuery</li>
@@ -345,4 +614,13 @@ $(function() {
 });
 	</script>
 </body>
-</html>
+</html><!--
+    <section>
+      <hgroup><h1></h1></hgroup>
+      <ul>
+        <li></li>
+      </ul>
+      <pre data-lang="ruby"><![CDATA[
+]]></pre>
+    </section>
+-->

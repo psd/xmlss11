@@ -71,7 +71,8 @@ src="images/cc.png" class="license"/></a>
       </ul>
       <h3>Nokogiri is a Rubygem</h3>
       <ul>
-        <li><a href="http://rubygems.org/">http://rubygems.org/</a></li>
+        <li><a
+href="http://rubygems.org/gems/nokogiri">http://rubygems.org/gems/nokogiri</a></li>
         <li>Ruby's pan-OS package manager</li>
         <li>Provided you have the development headers for libxml2 and
 libxslt, and a C compiler, installation is as simple as:</li>
@@ -291,6 +292,252 @@ ruby-1.9.2-p290 :001 >
       </ul>
     </section>
     <section>
+      <hgroup><h1>Builder</h1></hgroup>
+      <ul>
+        <li><a href="https://github.com/jimweirich/builder">https://github.com/jimweirich/builder</a></li>
+        <li>A simple, idiomatic Ruby, XML generation syntax</li>
+        <li>Built around blocks and dynamic method calls</li>
+        <li>Simple</li>
+        <li>MIT licensed</li>
+      </ul>
+      <h3>Builder is a Rubygem</h3>
+      <ul>
+        <li><a
+href="http://rubygems.org/gems/builder">http://rubygems.org/gems/builder</a></li>
+        <li>It's pure ruby, so no platform gotchas and installation is,
+again:</li>
+      </ul>
+      <pre data-lang="sh">
+gem install builder
+</pre>
+
+    </section>
+    <section>
+      <hgroup><h1>The simplest case</h1></hgroup>
+      <ul>
+        <li>Build and write a document to a string</li>
+      </ul>
+      <pre data-lang="ruby"><![CDATA[
+require 'builder'
+doc = Builder::XmlMarkup.new
+doc.html do |html|
+  html.head do |head|
+    head.title "Hello there"
+  end
+end
+# => "<html><head><title>Hello there</title></head></html>"
+]]></pre>
+    </section>
+    <section>
+      <hgroup><h1>A more complete case</h1></hgroup>
+      <ul>
+        <li>XML declaration and indentation please</li>
+        <li>Also, lets retrieve the result string after we're done</li>
+      </ul>
+      <pre data-lang="ruby"><![CDATA[
+require 'builder'
+doc = Builder::XmlMarkup.new(:indent => 2)
+doc.instruct!
+# n == node
+doc.html { |n| n.head { |n| n.title "Hello there" } }
+doc.target! # =>
+# <?xml version="1.0" encoding="UTF-8"?>
+# <html>
+#   <head>
+#     <title>Hello there</title>
+#   </head>
+# </html>"
+]]></pre>
+    </section>
+    <section>
+      <hgroup><h1>A quick digression into how it actually works</h1></hgroup>
+      <ul>
+        <li>If you don't know how it works, Builder's simplicity will bite you</li>
+        <li>Simplicity ~= Simplistic</li>
+      </ul>
+      <h4>Builder is (deliberately) very stupid</h4>
+      <ol>
+        <li>It's just writing at the end of a string or IO object</li>
+        <li>It's just intercepting all method calls to itself (except a couple of
+special ones) and assuming they're tag names</li>
+      </ol>
+      <pre data-lang="ruby"><![CDATA[
+# (in IRB)
+require 'builder'
+doc = Builder::XmlMarkup.new # => "<inspect/>"
+]]></pre>
+      <ul>
+        <li>IRB calls inspect on the result of an expression in order to
+show you the result</li>
+        <li>Builder intercepts the call in inspect and creates a tag...</li>
+        <li>Simplicity ~= Simplistic</li>
+      </ul>
+    </section>
+    <section>
+      <hgroup><h1>That can be really handy</h1></hgroup>
+      <ul>
+        <li>Builder just works with a string, and provides access to
+that string</li>
+        <li>If you need to just shove something into the output, you can</li>
+        <li>Like, for example, IE Conditional Comments in HTML</li>
+      </ul>
+      <pre data-lang="ruby"><![CDATA[
+doc.html do |xml|
+  xml.head { |xml|  xml.title "Title goes here" }
+  xml << <<-EOS
+  <!--[if IE]>
+  <body class="ie">
+  <![endif]-->
+  <!--[if !IE]>-->
+  <body>
+  <!--<![endif]>-->
+  EOS
+  xml.h1 "Not entirely well-formed"
+  xml << "  </body>\n"
+end
+]]></pre>
+    </section>
+    <section>
+      <pre data-lang="html"><![CDATA[
+<html>
+  <head>
+    <title>Title goes here</title>
+  </head>
+  <!--[if IE]>
+  <body class="ie">
+  <![endif]-->
+  <!--[if !IE]>-->
+  <body>
+  <!--<![endif]>-->
+  <h1>Not entirely well-formed</h1>
+  </body>
+</html>
+]]></pre>
+    </section>
+    <section>
+      <hgroup><h1>What about attributes?</h1></hgroup>
+      <ul>
+        <li>Since element creation is a method call, attributes are
+arguments to that method call</li>
+      </ul>
+      <pre data-lang="ruby"><![CDATA[
+doc.html(:lang => 'en') { |xml| ... }
+# => <html lang="en">...</html>
+xml.p("Paragaph text", :class => "example")
+# => <p class="example">Paragraph text</p>
+xml.p({:class => "example"}, "Paragaph text")
+# => <p class="example">Paragraph text</p>
+]]></pre>
+    </section>
+    <section>
+      <hgroup><h1>Another digression, this time into Ruby syntax</h1></hgroup>
+      <ul>
+        <li>Ruby allows you to omit the parentheses from method calls</li>
+        <li>(Operator precedence can hurt you here, particularly with
+blocks</li>
+        <li>Ruby doesn't actually have keyword arguments.</li>
+        <li>What it does do is assume the last argument to a method is a
+hash if it looks like one, so:</li>
+      </ul>
+      <pre data-lang="ruby"><![CDATA[
+object.method("hello" => "mum") # is the same as
+object.method({"hello" => "mum"})
+
+object.method("arg", "hello" => "mum") # is the same as
+object.method("arg", {"hello" => "mum"})
+
+object.method("hello" => "mum", "arg") 
+# => SyntaxError: (irb):1: syntax error, unexpected ')', expecting tASSOC)
+
+object.method :key => value
+object.method key: value # in 1.9
+]]></pre>
+    </section>
+    <section>
+      <hgroup><h1>Namespaces</h1></hgroup>
+      <ul>
+        <li>There are two ways to do this</li>
+        <li>Neither is what I'd call pretty</li>
+        <li>Fortunately Attributes are easy</li>
+      </ul>
+      <pre data-lang="ruby"><![CDATA[
+# default namespace (easy)
+doc.elementName(xmlns: 'http://a.url/')
+# declared namespace
+doc.prefix1 :elementName, 'xmlns:prefix1' => 'http://a.url/1'
+doc.tag!('prefix2:elementName', 'xmlns:prefix2' => 'http://a.url/2')
+
+# <elementName xmlns="http://a.url/"/>
+# <prefix1:elementName xmlns:prefix1="http://a.url/1"/>
+# <prefix2:elementName xmlns:prefix2="http://a.url/2"/>
+]]></pre>
+    </section>
+    <section>
+      <hgroup><h1>Namespaces are not real</h1></hgroup>
+      <ul>
+        <li>Very important, this.</li>
+        <li>Remember, it's just a string</li>
+      </ul>
+      <pre data-lang="ruby"><![CDATA[
+doc = Builder::XmlMarkup.new(:indent => 2);
+doc.instruct!
+doc.html('xmlns' => '&', 'xmlns:woo' => 'http:a.url/') { |n| n.head { |n|
+n.tag!('wah:title', "Hello there") } }
+doc.target! # =>
+# <?xml version="1.0" encoding="UTF-8"?>
+# <html xmlns="&amp;"  xmlns:woo="http:a.url/">
+#   <head>
+#     <wah:title>Hello there</wah:title>
+#   </head>
+# </html>
+]]></pre>
+    </section>
+    <section>
+      <hgroup><h1>Builder, in conclusion</h1></hgroup>
+      <ul>
+        <li>The best thing about Builder is that all it knows how to do
+is nest tags and escape strings</li>
+        <li>The worst thing about Builder is that all it knows how to do
+is nest tags and escape strings</li>
+        <li>When the problems outweigh the simplicity, use a different
+tool</li>
+      </ul>
+    </section>
+    <section>
+      <hgroup><h1>Generating XML with Nokogiri</h1></hgroup>
+      <ul>
+        <li>Nokogiri is quite happy to create new, and manipulate
+existing, documents</li>
+        <li>You can use the DOM-ish API we looked at earlier</li>
+        <li>Or, you can use its Builder-like DSL.</li>
+      </ul>
+    </section>
+    <section>
+      <hgroup><h1>The DOM-ish way</h1></hgroup>
+      <pre data-lang="ruby"><![CDATA[
+doc = Nokogiri::XML::Document.new
+node = doc.create_element("misterTag")
+doc.add_child(node)
+# or, 
+doc.add_child('<misterTag>')
+]]></pre>
+    </section>
+    <section>
+      <hgroup><h1>The Builder-like way</h1></hgroup>
+      <pre data-lang="ruby"><![CDATA[
+builder = Nokogiri::XML::Builder.new do |xml|
+  xml.misterTag('xmlns:prefix' => 'http://a.url/') {
+    xml['prefix'].element(:id => "one")
+  }
+end
+puts builder.to_xml
+# <?xml version="1.0"?>
+# <misterTag xmlns:prefix="http://a.url/">
+#   <prefix:element id="one"/>
+# </misterTag>
+]]></pre>
+    </section>
+    <section>
       <hgroup><h1>DOM scripting</h1></hgroup>
       <ul>
         <li>jQuery</li>
@@ -319,4 +566,13 @@ $(function() {
 	</script>
 </body>
 </html>
-
+<!--
+    <section>
+      <hgroup><h1></h1></hgroup>
+      <ul>
+        <li></li>
+      </ul>
+      <pre data-lang="ruby"><![CDATA[
+]]></pre>
+    </section>
+-->
