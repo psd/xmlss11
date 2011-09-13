@@ -54,11 +54,12 @@ src="images/cc.png" class="license"/></a>
     </section>
     <section>
       <hgroup><h1>Reading</h1></hgroup>
-      <p>simple XPath
-         CSS Selectors
-         More complex documents
-         simple (complex) XPath - custom functions
-      </p>
+      <ul>
+        <li>Parsing with Nokogiri</li>
+        <li>Finding things with XPath and CSS Selectors</li>
+        <li>More complex documents (namespaces)</li>
+        <li>simple (complex) XPath - custom functions</li>
+      </ul>
     </section>
     <section>
       <hgroup><h1>Nokogiri</h1></hgroup>
@@ -231,6 +232,39 @@ doc.at_xpath('//element[ftw(., @useful)]', CustomFunctions.new)
       </ul>
     </section>
     <section>
+      <hgroup><h1>CSS selectors and namespaces</h1></hgroup>
+      <pre data-lang="ruby"><![CDATA[
+xml = <<-EOD
+<xh:html xmlns:xh="http://www.w3.org/1999/xhtml">
+  <xh:head/>
+</xh:html>
+EOD
+
+doc = Nokogiri::XML(xml)
+doc.css('html').length # => 0
+doc.css('xh|html').length # => 1
+doc.css('prefix|html', 'prefix' => 'http://www.w3.org/1999/xhtml').length # => 1
+]]></pre>
+    </section>
+    <section>
+      <hgroup><h1>CSS selectors (and cheating at namespaces)</h1></hgroup>
+      <ul>
+        <li>If you're dealing with the Default namespace (e.g. XHTML)
+then you can pretend they're not there...</li>
+      </ul>
+      <pre data-lang="ruby"><![CDATA[
+xml = <<-EOD
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head></head>
+</html>
+EOD
+
+doc = Nokogiri::XML(xml)
+doc.xpath('/html/head').length # => 0
+doc.css('html > head').length # => 1
+]]></pre>
+    </section>
+    <section>
       <hgroup><h1>I've got a REPL and I'm not afraid to use it</h1></hgroup>
       <ul>
         <li>Fire up the interactive Ruby interpreter and try it out</li>
@@ -238,6 +272,9 @@ doc.at_xpath('//element[ftw(., @useful)]', CustomFunctions.new)
         set up for you</li>
         <li>Try parsing a couple of webpages (don't forget to require
         open-uri) or some files you have locally</li>
+        <li>The Nokogiri tutorials (<a
+href="http://nokogiri.org/tutorials">http://nokogiri.org/tutorials</a>)
+are a good reference.</li>
       </ul>
       <pre data-lang="sh"><![CDATA[
 $ irb
@@ -246,13 +283,28 @@ ruby-1.9.2-p290 :001 >
     </section>
     <section>
       <hgroup><h1>Writing</h1></hgroup>
-      <p>Builder
-        DOM-ish with Nokogiri
-        Namespaces, oh my!
-      </p>
+      <ul>
+        <li>Generating XML with Builder</li>
+        <li>DOM-ish building and manipulation with Nokogiri</li>
+        <li>Un-DOM-ish building and manipulation with Nokogiri</li>
+        <li>More complex documents with Builder (Namespaces again)</li>
+      </ul>
     </section>
     <section>
       <hgroup><h1>DOM scripting</h1></hgroup>
+      <ul>
+        <li>jQuery</li>
+        <li>The basics</li>
+        <li>In the page</li>
+        <li>Debugging and exploration in other people's pages</li>
+      </ul>
+    </section>
+    <section>
+      <hgroup><h1>Sprucing up Pub Finder General</h1></hgroup>
+      <ul>
+        <li>Integrating the Google Places API</li>
+        <li>Provding data for our own basic API</li>
+      </ul>
     </section>
 	</div>
 
