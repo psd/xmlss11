@@ -540,10 +540,157 @@ puts builder.to_xml
     <section>
       <hgroup><h1>DOM scripting</h1></hgroup>
       <ul>
+        <li>What is it?</li>
         <li>jQuery</li>
         <li>The basics</li>
         <li>In the page</li>
         <li>Debugging and exploration in other people's pages</li>
+      </ul>
+    </section>
+    <section>
+      <hgroup><h1>What is DOM scripting?</h1></hgroup>
+      <ul>
+        <li>DOM scripting is the process of applying the techniques of
+programmatic manipulation of a document to a 'live' DOM</li>
+        <li>(It's just a fancy way of talking about live manipulation of a web
+page in a browser)</li>
+      </ul>
+    </section>
+    <section>
+      <hgroup><h1>Why would I be interested? (and why cover it here and
+not with the HTML / CSS / JS stuff?)</h1></hgroup>
+      <ul>
+        <li>DOM scripting, of one kind of another, is the basis for all
+dynamic – where the page is updated without refreshing – web apps</li>
+        <li>AJAX (hereafter Ajax, because the term is now so broadly
+applied) is simply DOM Scripting + network access</li>
+        <li>More pertinently, a whole raft of things which are now taken
+for granted, and which you may want to use, rely entirely on it (Google Maps, for one)</li>
+        <li>A lot of third-party integrations you may want (or be unable to avoid
+(like Facebook) require its use: Facebook's ID service, for example,
+requires the use of DOM scripting</li>
+        <li>We're going to stay pretty focussed on some specific
+techniques and technologies to allow us to integrate Google Maps into
+Pub Finder General later, and Norm's going to give a much broader
+overview in his session</li>
+      </ul>
+    </section>
+    <section>
+      <hgroup><h1>DOM Scripting == Javascript</h1></hgroup>
+      <ul>
+        <li>Javascript is the only universally available language to
+developers in web browsers</li>
+        <li>It's actually a really powerful language, with a whole set
+of very powerful dynamic features (closures,
+function-as-first-class-objects)</li>
+      </ul>
+    </section>
+    <section>
+      <hgroup><h1>Javascript ~= Lisp</h1></hgroup>
+      <ul>
+        <li>Although it has Java in the name and C-like syntax, it has
+nothing at all to do with Java, and very little to do with C</li>
+        <li>It's actually closer to Lisp, albeit a weird variety with a
+few carbunkles</li>
+      </ul>
+      <hgroup><h1>Javascript in the context of the browser</h1></hgroup>
+      <ul>
+        <li>The thing that makes Javascript powerful in the context of
+the browser are the APIs that are exposed</li>
+        <li>We can call these the DOM, although there's a few more
+things there (particularly with the HTML 5 efforts, as you'll see
+later).</li>
+        <li>When we talk about DOM scripting we're really talking about
+making use of these APIs through Javascript, so most of what we need to
+cover are APIs rather than the language itself</li>
+      </ul>
+    </section>
+    <section>
+      <hgroup><h1>Core techniques</h1></hgroup>
+      <ul>
+        <li>DOM traversal (finding stuff)</li>
+        <li>DOM manipulation (changing stuff)</li>
+        <li>Ajax (talking to the outside worls</li>
+        <li>Event handling and dispatch (tying everything together)</li>
+      </ul>
+    </section>
+    <section>
+      <hgroup><h1>Event handling</h1></hgroup>
+      <p>Somewhat perversely, this is the best starting point</p>
+      <ul>
+        <li>In the Bad Old Days (circa NN3/4) certain things had
+programmatic hooks, and click events were one of the first:</li>
+      </ul>
+      <pre data-lang="html"><![CDATA[
+<a href="http://a.url/" onclick="f('http://a.url/'); return false">Hi!</a>
+]]></pre>
+      <ul>
+        <li>What we have here is an event handler declared with inline Javascript. The <span data-lang="javascript">return false</span> bit is there to prevent the default action (i.e. following the link) from happening.</li>
+        <li>There were a range of events you could hook into this way:</li>
+      </ul>
+      <pre data-lang="javascript"><![CDATA[
+onload   onunload // Document load
+onclick  onmousedown onmouseup onmouseover onmouseout // Mouse events
+onsubmit onchange // Form events
+]]></pre>
+    </section>
+    <section>
+      <hgroup><h1>Event handling</h1></hgroup>
+      <ul>
+        <li>That was the 'DOM Level 0' events</li>
+        <li>APIs for registering event handlers were developed and
+standardised as the W3C's DOM Level 2:</li>
+      </ul>
+      <pre data-lang="javascript"><![CDATA[
+load   unload // Document load
+click  mousedown mouseup mouseover mouseout // Mouse events
+submit change // Form events
+]]></pre>
+      <ul>
+        <li>I jest. The critical thing was the standardisation of event
+propagation and event registration</li>
+        <li>Events (and therefore event handling) are the foundation of
+javascript-reliant web apps - events are how the browser relays the
+user's actions to your javascript</li>
+        <li>Despite the DOM Level 2 standardisation, there were still
+cross-browser interop problems with event handler registration. Instead
+of showing you the 'native' APIs I'm going to hide behind the event
+API of the jQuery library, which papers over the cracks.</li>
+        <li>jQuery is awesome, and (rather elegantly) papers over a great many
+cross-browser cracks. I'll be using it in the examples very heavily</li>
+      </ul>
+    </section>
+    <section>
+      <hgroup><h1>Registering an event handler</h1></hgroup>
+      <ul>
+        <li>Let's register an event handler, and then dissect it a bit</li>
+      </ul>
+      <pre data-lang="javascript"><![CDATA[
+node.click(function() {
+  do_something_with(this); return false;
+});
+node.click(function(e) {
+  e.preventDefault(); do_something_with(this);
+});
+]]></pre>
+      <ul>
+        <li>A handler function is registered by calling a method with
+the same name as the event on the jQuery node of the element we're
+interested in. The method's argument is a function which can be a
+reference to a function, or an anonymous function (as in our example)</li>
+        <li>The callback function has an optional argument
+<code>e</code>, the DOM L2 event object,
+which contains lots of information about the event (this is very useful
+for mouse and keyboard events). <code>this</code> refers to the DOM node
+which caused captured the event (although not necessarily the node on which
+the event was originally triggered)</li>
+        <li>Calling <code>preventDefault()</code> on the event object
+has the same effect as the old <code>return false</code> approach</li>
+      </ul>
+    </section>
+    <section>
+      <hgroup><h1>Traversal: finding things to act on</h1></hgroup>
+      <ul>
       </ul>
     </section>
     <section>
@@ -572,7 +719,7 @@ $(function() {
       <ul>
         <li></li>
       </ul>
-      <pre data-lang="ruby"><![CDATA[
+      <pre data-lang="javascript"><![CDATA[
 ]]></pre>
     </section>
 -->
