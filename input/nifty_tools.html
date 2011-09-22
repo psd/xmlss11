@@ -639,7 +639,7 @@ onsubmit onchange // Form events
       <ul>
         <li>That was the 'DOM Level 0' events</li>
         <li>APIs for registering event handlers were developed and
-standardised as the W3C's DOM Level 2:</li>
+standardised as the W3C's DOM Level 2, with some sample events:</li>
       </ul>
       <pre data-lang="javascript"><![CDATA[
 load   unload // Document load
@@ -678,6 +678,19 @@ node.click(function(e) {
 the same name as the event on the jQuery node of the element we're
 interested in. The method's argument is a function which can be a
 reference to a function, or an anonymous function (as in our example)</li>
+      </ul>
+    </section>
+    <section>
+      <hgroup><h1>Registering an event handler (cont.)</h1></hgroup>
+      <pre data-lang="javascript"><![CDATA[
+node.click(function() {
+  do_something_with(this); return false;
+});
+node.click(function(e) {
+  e.preventDefault(); do_something_with(this);
+});
+]]></pre>
+      <ul>
         <li>The callback function has an optional argument
 <code>e</code>, the DOM L2 event object,
 which contains lots of information about the event (this is very useful
@@ -691,6 +704,88 @@ has the same effect as the old <code>return false</code> approach</li>
     <section>
       <hgroup><h1>Traversal: finding things to act on</h1></hgroup>
       <ul>
+        <li>If we're not going to declare event handlers inline in our markup then we need a way of binding them to DOM nodes</li>
+        <li>Using plain DOM and jQuery this is how you get an element with an ID:</li>
+      </ul>
+      <pre data-lang="javascript"><![CDATA[
+document.getElementById('that-id'); // DOM
+$('#that-id'); // jQuery
+]]></pre>
+      <ul>
+        <li>And finding something using CSS</li>
+      </ul>
+      <pre data-lang="javascript"><![CDATA[
+$('.class-name'); // jQuery
+// imagine several lines of wailing and gnashing of teeth in DOM.
+]]></pre>
+    </section>
+    <section>
+      <hgroup><h1>Manipulating the DOM</h1></hgroup>
+      <ul>
+        <li>One of the things you'll find yourself needing to do is adding and removing things.</li>
+        <li>jQuery makes a load of that very easy:</li>
+      </ul>
+      <pre data-lang="javascript"><![CDATA[
+$('#that-id').append($('#that-other-id'));
+$('#that-id').appendTo($('#that-other-id'));
+$('#that-id').append('<div class="gubbins">...</div>');
+var clone = $('that-id').clone(); // bad idea because of the ID
+$('#that-id').first().find('.interesting');
+$('#that-id').find('.interesting');
+$('.interesting').each(function() {
+  $(this).click(some_handler);
+});
+$('.interesting').click(some_handler);
+$('.interesting').empty();
+$('.interesting').remove();
+]]></pre>
+    </section>
+    <section>
+      <hgroup><h1>Ajax: making HTTP requests</h1></hgroup>
+      <ul>
+        <li>Your way of talking to the outside world</li>
+        <li>This is how you talk back to your app server</li>
+      </ul>
+      <pre data-lang="javascript"><![CDATA[
+$.get('/some/url', {some: 'form-ish data'}, function(data) {
+  var nodes = $(data);
+  nodes.appendTo($('#that-place-there');
+});
+]]></pre>
+      <ul>
+        <li><code>$.get</code> is just a convenience wrapper around <code>$.ajax</code>:</li>
+      </ul>
+    </section>
+    <section>
+      <hgroup><h1><code>$.ajax</code></h1></hgroup>
+      <pre data-lang="javascript"><![CDATA[
+$.ajax('/some/url' {
+  type: 'GET',
+  success: function() {
+    $('.notifier').addClass("done");
+  }
+});
+]]></pre>
+      <ul>
+        <li>There are lots more options which are documented over at api.jquery.com</li>
+      </ul>
+    </section>
+    <section>
+      <hgroup><h1>Putting all that together</h1></hgroup>
+      <ul>
+        <li>A more complete example</li>
+      </ul>
+      <pre data-lang="javascript"><![CDATA[
+$('#that-one').click(function(e) {
+  e.preventDefault();
+  $.get('/some/url', function(data) {
+    $('#motd').text(data);
+  },
+  dataType: 'text');
+});
+]]></pre>
+      <ul>
+        <li>Chrome's Web Inspector has jQuery built-in, so let's try some of this out (on a page of your choosing)</li>
       </ul>
     </section>
     <section>
